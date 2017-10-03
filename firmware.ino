@@ -393,20 +393,29 @@ void ShutterMove() {
   }
   int Shutter = atoi(arg);
   Shutter = Shutter - 1; // Choosing the desired shutter
-
   // Checking a valid shutter
   if (Shutter <= -1 || Shutter >= 3) {
     Serial.println("Invalid shutter");
     return;
     }
+  
+    arg = sCmd.next();
+    // Checks argument found
+    if (arg == NULL) {
+      Serial.println("No final state chosen");
+      return;
+    }
+    int state = atoi(arg);
+    if (state != 0 || state != 1){
+      Serial.println("Wrong final state");
+      return;
+    }
+
     // Turns on the mosfet enabling the high power mode of the shutters
     digitalWrite(SHUTTER_ENABLE, HIGH);
-    digitalWrite(shutters[Shutter], !digitalRead(shutters[Shutter]));
-    digitalWrite(SHUT_NEG, !digitalRead(shutters[Shutter]));
+    digitalWrite(shutters[Shutter], state);
     delay(100);
     digitalWrite(SHUTTER_ENABLE, LOW);
-    Serial.println(!digitalRead(shutters[Shutter]));
-
 }
 /**
 // Prints Help text through serial
